@@ -236,18 +236,44 @@ export default function App() {
   };
 
   const handleBuy = async () => {
-    if (!contract || !maticAmount) return;
+    if (!contract || !maticAmount || !account) return;
     try {
       setLoading(true);
       setError(null);
-      const tx = await contract.buyPreSale(referrer, {
-        value: ethers.parseEther(maticAmount)
+      
+      const value = ethers.parseEther(maticAmount);
+      
+      // Safety: Many contracts revert if referrer is the buyer themselves
+      const effectiveReferrer = (referrer.toLowerCase() === account.toLowerCase()) 
+        ? ethers.ZeroAddress 
+        : referrer;
+
+      // We provide a manual gas limit to bypass the 'estimateGas' failure 
+      // which is causing the "missing revert data" error.
+      // 500k is usually more than enough for a presale purchase.
+      const tx = await contract.buyPreSale(effectiveReferrer, {
+        value,
+        gasLimit: 500000 
       });
+      
       await tx.wait();
       setSuccess("Successfully purchased AI Gods tokens!");
-      if (account) await refreshData(contract, account);
+      await refreshData(contract, account);
     } catch (err: any) {
-      setError(err.reason || err.message || "Transaction failed");
+      console.error("Buy error:", err);
+      
+      let msg = "Transaction failed. Please ensure the presale is active and you have enough MATIC.";
+      
+      if (err.message?.includes("user rejected")) {
+        msg = "Transaction rejected by user.";
+      } else if (err.reason) {
+        msg = err.reason;
+      } else if (err.message) {
+        // Try to extract a cleaner message from the error string
+        msg = err.message.split("(")[0].trim();
+      }
+      
+      setError(msg);
     } finally {
       setLoading(false);
     }
