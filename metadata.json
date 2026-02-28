@@ -1,5 +1,5 @@
 {
-  "name": "AI Ghost Animator",
-  "description": "A professional standalone AI animation video creation suite. Create, animate, and export high-quality videos with voice cloning and advanced timeline editing.",
+  "name": "AIgods Animator",
+  "description": "The world's most advanced standalone AI animation suite. Create professional 2D/3D animations with voice cloning and high-fidelity rendering.",
   "requestFramePermissions": ["microphone"]
 }
