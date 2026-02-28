@@ -1,5 +1,5 @@
 {
-  "name": "AI Gods - Presale & Airdrop",
-  "description": "The official presale and airdrop platform for AI Gods. Connect your wallet to participate in the future of AI on Polygon.",
-  "requestFramePermissions": []
+  "name": "AI Ghost Animator",
+  "description": "A professional standalone AI animation video creation suite. Create, animate, and export high-quality videos with voice cloning and advanced timeline editing.",
+  "requestFramePermissions": ["microphone"]
 }
